@@ -70,8 +70,10 @@ class Spice:
             cwd=os.path.dirname(os.path.abspath(__file__)))
 
         # Read and process results
-        with open(out_file.name) as data_file:    
-          results = json.load(data_file)
+        # Remove the NUL character at the end to avoid JSONDecodeError
+        with open(out_file.name, 'r', encoding='utf-8') as data_file:
+            content = data_file.read().rstrip('\x00')        
+            results = json.loads(content)
         os.remove(in_file.name)
         os.remove(out_file.name)
 
